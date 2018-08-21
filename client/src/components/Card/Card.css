@@ -5,3 +5,7 @@
     color: white;
     background-size: cover;
 }
+
+.chi-card:hover {
+    cursor: pointer;
+}
