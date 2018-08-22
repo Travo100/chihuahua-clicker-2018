@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/chihuahuaDB', { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chihuahuaDB', { useNewUrlParser: true });
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
