@@ -1,17 +1,27 @@
 import React, { Component } from "react";
-import cards from "../../cards.json";
 
 import Card from "../Card";
 import Scoreboard from "../Scoreboard";
-import Footer from "../Footer";
+import API from "../../utils/API";
 
 class Game extends Component {
 
     state = {
-        chihuahuas: cards,
+        chihuahuas: [],
         matches: 0,
         guesses: 0,
         matchedChihuahua: 3
+    }
+
+    componentDidMount() {
+        API.getChihuahuas()
+        .then(res => {
+            this.setState({
+                chihuahuas: res.data,
+                matchedChihuahua: res.data[2]._id
+            });
+        })
+        .catch(err => console.log(err));
     }
 
     getChihuahua = (id) => {
@@ -20,10 +30,11 @@ class Game extends Component {
             // update the matches state by one 
             // but not the guesses state 
             // if the are also a match pick a new random chihuahua
-            let randomId = Math.floor(Math.random() * this.state.chihuahuas.length) + 1;
+            let randomId = Math.floor(Math.random() * this.state.chihuahuas.length);
+            let selectedChihuahuaId = this.state.chihuahuas[randomId]._id;
             this.setState({
                 matches: this.state.matches + 1,
-                matchedChihuahua: randomId
+                matchedChihuahua: selectedChihuahuaId
             });
         } else {
             // if they are not a match update the 
@@ -36,7 +47,7 @@ class Game extends Component {
 
     render() {
         return (
-            <div className="container">
+            <section>
                 <Scoreboard
                     matches={this.state.matches}
                     guesses={this.state.guesses}
@@ -44,16 +55,15 @@ class Game extends Component {
                 <div className="row">
                     {this.state.chihuahuas.map(chihuahua => (
                         <Card
-                            key={chihuahua.id}
-                            id={chihuahua.id}
+                            key={chihuahua._id}
+                            id={chihuahua._id}
                             name={chihuahua.name}
                             image={chihuahua.image}
                             getChihuahua={this.getChihuahua}
                         />
                     ))}
                 </div>
-                <Footer />
-            </div>
+            </section>
         )
     }
 }
